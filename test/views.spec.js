@@ -26,6 +26,10 @@ describe('views', function () {
           name : 'reimu',
           lastname : 'hakurei'
         },
+        miko2 : {
+          name : 'reimu',
+          lastname : 'different-lastname'
+        },
         magician : {
           _rev : '67890',
           name : 'marisa',
@@ -52,6 +56,11 @@ describe('views', function () {
                   return a + b.id;
                 }, '');
               }
+            },
+            someview2 : {
+              map : function(doc){
+                emit([doc.name, doc.lastname]);
+              }
             }
           },
           _rev : '88888'
@@ -73,7 +82,7 @@ describe('views', function () {
     get({ route : { method : 'GET' }, params : { db : 'people', doc : 'designer', name : 'someview' }, query : { } }, res, dummy_function);
     expect(result.rows.length).toBe(1);
     expect(result.rows[0].key).toBe(null);
-    expect(result.rows[0].value).toBe('qballqballplayer2player2mikomikomagicianmagician');
+    expect(result.rows[0].value).toBe('qballqballplayer2player2miko2miko2mikomikomagicianmagician');
   });
 
   it('should be able to use grouping', function () {
@@ -97,6 +106,13 @@ describe('views', function () {
     expect(result.rows[1].id).toBe('miko');
     expect(result.rows[1].key).toBe(null);
     expect(result.rows[7].id).toBe('qball');
+    //console.log(JSON.stringify(result, null, ' '));
+  });
+  it('should be able find multiple keys, by providing "null" and "{}" arguments to startkey and endkey', function () {
+    get({ route : { method : 'GET' }, params : { db : 'people', doc : 'designer', name : 'someview2', startkey : ['reimu',null], endkey : ['reimu',{}] }, query : { reduce : 'false' } }, res, dummy_function);
+    expect(result.total_rows).toBe(2);
+    expect(result.rows[0].id).toBe('miko');
+    expect(result.rows[1].id).toBe('miko2');
     //console.log(JSON.stringify(result, null, ' '));
   });
   it('should be able to get only one specific key, by disabling reduce', function () {
