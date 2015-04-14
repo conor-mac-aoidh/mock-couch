@@ -58,7 +58,7 @@ describe('views', function () {
               }
             },
             someview2 : {
-              map : function(doc){
+              map : function (doc) {
                 emit([doc.name, doc.lastname]);
               }
             }
@@ -109,7 +109,7 @@ describe('views', function () {
     //console.log(JSON.stringify(result, null, ' '));
   });
   it('should be able find multiple keys, by providing "null" and "{}" arguments to startkey and endkey', function () {
-    get({ route : { method : 'GET' }, params : { db : 'people', doc : 'designer', name : 'someview2', startkey : ['reimu',null], endkey : ['reimu',{}] }, query : { reduce : 'false' } }, res, dummy_function);
+    get({ route : { method : 'GET' }, params : { db : 'people', doc : 'designer', name : 'someview2', startkey : ['reimu', null], endkey : ['reimu', {}] }, query : { reduce : 'false' } }, res, dummy_function);
     expect(result.total_rows).toBe(2);
     expect(result.rows[0].id).toBe('miko');
     expect(result.rows[1].id).toBe('miko2');
